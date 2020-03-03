@@ -1,0 +1,1 @@
+from .merge_pdf import main
