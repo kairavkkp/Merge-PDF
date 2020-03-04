@@ -15,7 +15,7 @@ Merge PDF files using customizations within a folder using Command line.
 `mergemypdf -c <number_of_pdfs> -o <order_of_merging>  -f <output_pdf_filename>`
 
 #### Example Usage:
-`mergemypdf -c 10 -o 1 -f merged.txt`
+`mergemypdf -c 10 -o 1 -f merged.pdf`
 
 
 #### Optional arguments:
