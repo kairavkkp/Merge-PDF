@@ -1,4 +1,4 @@
-#[Merge-PDF](https://github.com/kairavkkp/Merge-PDF)
+# [Merge-PDF](https://github.com/kairavkkp/Merge-PDF)
 [![PyPI version](https://badge.fury.io/py/mergemypdf.svg)](https://badge.fury.io/py/mergemypdf)
 
 Merge PDF files using customizations within a folder using Command line.
