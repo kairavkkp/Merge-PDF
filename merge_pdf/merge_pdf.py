@@ -41,9 +41,9 @@ def main():
     if args.count == None:
         #Ascending
         if args.order == 0:
-            pdfs = sorted([x for x in os.listdir() if ('.pdf' in x)])
+            pdfs = sorted([x for x in os.listdir() if ('.pdf' or '.PDF' in x)])
             for pdf in pdfs:
-                if '.pdf' in pdf:
+                if '.pdf' or '.PDF' in pdf:
                     if args.start_string == None and args.end_string == None and args.contains == None:
                         pdf_reader = PdfFileReader(pdf)
                         for page in range(pdf_reader.getNumPages()):
@@ -86,10 +86,10 @@ def main():
 
         #Descending
         if args.order == 1:
-            pdfs = [x for x in os.listdir() if ('.pdf' in x)]
+            pdfs = [x for x in os.listdir() if ('.pdf' or '.PDF' in x)]
             
             for pdf in pdfs[::-1]:
-                if '.pdf' in pdf:
+                if '.pdf' or '.PDF' in pdf:
 
                     if args.start_string == None and args.end_string == None and args.contains == None:
 
@@ -132,7 +132,7 @@ def main():
 
         #Shuffle
         if args.order == 2:
-            pdfs = [x for x in os.listdir() if ('.pdf' in x)]
+            pdfs = [x for x in os.listdir() if ('.pdf' or '.PDF' in x)]
             for count in range(len(pdfs)):
                 choice = random.choice(pdfs)
 
@@ -190,11 +190,11 @@ def main():
 
             #Ascending
             if args.order == 0:
-                pdfs = sorted([x for x in os.listdir() if ('.pdf' in x)])
+                pdfs = sorted([x for x in os.listdir() if ('.pdf' or '.PDF' in x)])
 
                 cnt = 0
                 for pdf in pdfs:
-                    if pdf[-3:] == 'pdf':
+                    if pdf[-3:] == 'pdf' or pdf[-3:] == 'PDF':
                         if args.start_string == None and args.end_string == None and args.contains == None:
                             pdf_reader = PdfFileReader(pdf)
                             for page in range(pdf_reader.getNumPages()):
@@ -246,11 +246,11 @@ def main():
             
             #Descending
             if args.order == 1:
-                pdfs = [x for x in os.listdir() if ('.pdf' in x)]
+                pdfs = [x for x in os.listdir() if ('.pdf' or '.PDF' in x)]
 
                 cnt = 0
                 for pdf in pdfs[::-1]:
-                    if pdf[-3:] == 'pdf':
+                    if pdf[-3:] == 'pdf' or pdf[-3:] == 'PDF':
 
                         if args.start_string == None and args.end_string == None and args.contains == None:
                             pdf_reader = PdfFileReader(pdf)
@@ -302,7 +302,7 @@ def main():
             if args.order == 2:
                 cnt = 0
 
-                pdfs = [x for x in os.listdir() if ('.pdf' in x)]
+                pdfs = [x for x in os.listdir() if ('.pdf' or '.PDF' in x)]
                 for count in range(args.count):
                     choice = random.choice(pdfs)
 
@@ -373,12 +373,4 @@ def main():
 if __name__ == '__main__':
     main()
 
-
-
-
-
-
-            
-
-
-
+    
