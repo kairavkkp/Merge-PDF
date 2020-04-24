@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mergemypdf",
-    version="0.0.2",
+    version="0.0.3",
     author="kairavkkp",
     author_email="kairavpithadia13@gmail.com",
     description="Merge PDFs using CLI with customizations.",
