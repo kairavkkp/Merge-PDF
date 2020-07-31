@@ -1,4 +1,5 @@
 # [Merge-PDF](https://github.com/kairavkkp/Merge-PDF)
+[![Build Status](https://travis-ci.com/kairavkkp/Merge-PDF.svg?branch=master)](https://travis-ci.com/kairavkkp/Merge-PDF)
 [![PyPI version](https://badge.fury.io/py/mergemypdf.svg)](https://badge.fury.io/py/mergemypdf)
 [![Downloads](https://pepy.tech/badge/mergemypdf)](https://pepy.tech/project/mergemypdf)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
