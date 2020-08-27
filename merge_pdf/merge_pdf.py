@@ -8,129 +8,120 @@ import re
 import uuid
 
 
-def main():        
+def read_pdf(pdf_reader, pdf_writer):
+    for page in range(pdf_reader.getNumPages()):
+        pdf_writer.addPage(pdf_reader.getPage(page))
 
-    parser = argparse.ArgumentParser(description='A package which merges all PDFs from a folder into a single PDF.')
-    parser.add_argument('-c','--count',action='store',dest='count',type=int,
-            help='Total number of PDFs to be merged. Default is all.')#fixed count, all
-
-    parser.add_argument('-o','--order',action='store',dest='order',type=int,default=0,
-            help='Order in which PDFs need to be merged. 0 is Ascending, 1 is descending and 2 is shuffle.')#ascending, descending, shuffle
-
-    parser.add_argument('-s','--startswith',action='store',dest='start_string',
-            help='Only merge PDFs whose names startswith provided strings.')# default None
-    parser.add_argument('-e','--endswith',action='store',dest='end_string'
-            ,help='Only merge PDFs whose names startswith provided strings.')#default None
-    parser.add_argument('-cn','--contains',action='store',dest='contains'
-            ,help='Only merge PDFs whose names contains provided strings.')#default None
-    parser.add_argument('-f','--filename',action='store',dest='filename_string',default=str(uuid.uuid4()).split('-')[0]+'.pdf'
-            ,help='Filename of the merged PDF. Default is randomly generated names.')
+    return pdf_writer
 
 
+def main():
+
+    parser = argparse.ArgumentParser(
+        description='A package which merges all PDFs from a folder into a single PDF.')
+    parser.add_argument('-c', '--count', action='store', dest='count', type=int,
+                        help='Total number of PDFs to be merged. Default is all.')  # fixed count, all
+
+    parser.add_argument('-o', '--order', action='store', dest='order', type=int, default=0,
+                        help='Order in which PDFs need to be merged. 0 is Ascending, 1 is descending and 2 is shuffle.')  # ascending, descending, shuffle
+
+    parser.add_argument('-s', '--startswith', action='store', dest='start_string',
+                        help='Only merge PDFs whose names startswith provided strings.')  # default None
+    parser.add_argument('-e', '--endswith', action='store', dest='end_string',
+                        help='Only merge PDFs whose names startswith provided strings.')  # default None
+    parser.add_argument('-cn', '--contains', action='store', dest='contains',
+                        help='Only merge PDFs whose names contains provided strings.')  # default None
+    parser.add_argument('-f', '--filename', action='store', dest='filename_string', default=str(uuid.uuid4()
+                                                                                                ).split('-')[0]+'.pdf', help='Filename of the merged PDF. Default is randomly generated names.')
 
     args = parser.parse_args()
     print(args)
 
-    #print(args)
+    # print(args)
 
     os.chdir(os.getcwd())
 
     pdf_writer = PdfFileWriter()
 
-    ## If no count mentioned
+    # If no count mentioned
     if args.count == None:
-        #Ascending
+        # Ascending
         if args.order == 0:
             pdfs = sorted([x for x in os.listdir() if ('.pdf' in x.lower())])
             for pdf in pdfs:
                 if '.pdf' in pdf.lower():
                     if args.start_string == None and args.end_string == None and args.contains == None:
                         pdf_reader = PdfFileReader(pdf)
-                        for page in range(pdf_reader.getNumPages()):
-                            pdf_writer.addPage(pdf_reader.getPage(page))
-                    
-                    #With end or start strings
+                        pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+                    # With end or start strings
                     else:
-                        #Starts
-                
+                        # Starts
+
                         if args.start_string is not None:
                             #print('DEBUG: Entered StartsWith Portion')
 
-                            if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+',pdf[:-4],re.IGNORECASE):
+                            if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', pdf[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(pdf)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
-
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
                         if args.end_string is not None:
                             #print('DEBUG: Entered EndsWith Portion')
 
-                            if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$',pdf[:-4],re.IGNORECASE):
+                            if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', pdf[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(pdf)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
-                        
                         if args.contains is not None:
                             #print('DEBUG: Entered Contains Portion')
 
-                            if re.search(re.escape(str(args.contains)),pdf[:-4],re.IGNORECASE):
+                            if re.search(re.escape(str(args.contains)), pdf[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(pdf)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
-
-        
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
             with open(args.filename_string, 'wb') as out:
                 pdf_writer.write(out)
 
-        #Descending
+        # Descending
         if args.order == 1:
             pdfs = [x for x in os.listdir() if ('.pdf' in x.lower())]
-            
+
             for pdf in pdfs[::-1]:
                 if '.pdf' in pdf.lower():
 
                     if args.start_string == None and args.end_string == None and args.contains == None:
 
                         pdf_reader = PdfFileReader(pdf)
-                        for page in range(pdf_reader.getNumPages()):
-                            pdf_writer.addPage(pdf_reader.getPage(page))
+                        pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
                     else:
-                        #Starts
-                
+                        # Starts
+
                         if args.start_string is not None:
                             #print('DEBUG: Entered StartsWith Portion')
 
-                            if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+',pdf[:-4],re.IGNORECASE):
+                            if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', pdf[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(pdf)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
-
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
                         if args.end_string is not None:
                             #print('DEBUG: Entered EndsWith Portion')
 
-                            if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$',pdf[:-4],re.IGNORECASE):
+                            if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', pdf[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(pdf)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
-                        
                         if args.contains is not None:
                             #print('DEBUG: Entered Contains Portion')
 
-                            if re.search(re.escape(str(args.contains)),pdf[:-4],re.IGNORECASE):
+                            if re.search(re.escape(str(args.contains)), pdf[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(pdf)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
-
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
             with open(args.filename_string, 'wb') as out:
                 pdf_writer.write(out)
 
-        #Shuffle
+        # Shuffle
         if args.order == 2:
             pdfs = [x for x in os.listdir() if ('.pdf' in x.lower())]
             for count in range(len(pdfs)):
@@ -140,111 +131,97 @@ def main():
 
                     pdf_reader = PdfFileReader(choice)
                     pdfs.remove(choice)
-                    for page in range(pdf_reader.getNumPages()):
-                        pdf_writer.addPage(pdf_reader.getPage(page))
+                    pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
                 else:
-                    #Starts
-                
-                        if args.start_string is not None:
-                            #print('DEBUG: Entered StartsWith Portion')
+                    # Starts
 
-                            if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+',choice[:-4],re.IGNORECASE):
-                                pdf_reader = PdfFileReader(choice)
-                                pdfs.remove(choice)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
+                    if args.start_string is not None:
+                        #print('DEBUG: Entered StartsWith Portion')
 
+                        if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', choice[:-4], re.IGNORECASE):
+                            pdf_reader = PdfFileReader(choice)
+                            pdfs.remove(choice)
+                            pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
-                        if args.end_string is not None:
-                            #print('DEBUG: Entered EndsWith Portion')
+                    if args.end_string is not None:
+                        #print('DEBUG: Entered EndsWith Portion')
 
-                            if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$',choice[:-4],re.IGNORECASE):
-                                pdf_reader = PdfFileReader(choice)
-                                pdfs.remove(choice)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
+                        if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', choice[:-4], re.IGNORECASE):
+                            pdf_reader = PdfFileReader(choice)
+                            pdfs.remove(choice)
+                            pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
-                        
-                        if args.contains is not None:
-                            #print('DEBUG: Entered Contains Portion')
+                    if args.contains is not None:
+                        #print('DEBUG: Entered Contains Portion')
 
-                            if re.search(re.escape(str(args.contains)),choice[:-4],re.IGNORECASE):
-                                pdf_reader = PdfFileReader(choice)
-                                pdfs.remove(choice)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
+                        if re.search(re.escape(str(args.contains)), choice[:-4], re.IGNORECASE):
+                            pdf_reader = PdfFileReader(choice)
+                            pdfs.remove(choice)
+                            pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
-
-
-
-            
             with open(args.filename_string, 'wb') as out:
                 pdf_writer.write(out)
 
-            
-
     else:
-        ## Count is within range of the available PDFs
+        # Count is within range of the available PDFs
         if args.count <= len(os.listdir()):
 
-            #Ascending
+            # Ascending
             if args.order == 0:
-                pdfs = sorted([x for x in os.listdir() if ('.pdf' in x.lower())])
+                pdfs = sorted(
+                    [x for x in os.listdir() if ('.pdf' in x.lower())])
 
                 cnt = 0
                 for pdf in pdfs:
                     if pdf[-3:].lower() == 'pdf':
                         if args.start_string == None and args.end_string == None and args.contains == None:
                             pdf_reader = PdfFileReader(pdf)
-                            for page in range(pdf_reader.getNumPages()):
-                                pdf_writer.addPage(pdf_reader.getPage(page))
-                            cnt+=1
-                        if cnt == args.count:
-                                break
+                            pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
+                            cnt += 1
+                        if cnt == args.count:
+                            break
 
                         else:
                             if args.start_string is not None:
-                            #print('DEBUG: Entered StartsWith Portion')
+                                #print('DEBUG: Entered StartsWith Portion')
 
-                                if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+',pdf[:-4],re.IGNORECASE):
+                                if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', pdf[:-4], re.IGNORECASE):
                                     pdf_reader = PdfFileReader(pdf)
-                                    for page in range(pdf_reader.getNumPages()):
-                                        pdf_writer.addPage(pdf_reader.getPage(page))
-                                    cnt+=1
+                                    pdf_writer = read_pdf(
+                                        pdf_reader, pdf_writer)
+
+                                    cnt += 1
                                 if cnt == args.count:
-                                        break
+                                    break
 
                             if args.end_string is not None:
-                            #print('DEBUG: Entered EndsWith Portion')
+                                #print('DEBUG: Entered EndsWith Portion')
 
-                                if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$',pdf[:-4],re.IGNORECASE):
+                                if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', pdf[:-4], re.IGNORECASE):
                                     pdf_reader = PdfFileReader(pdf)
-                                    for page in range(pdf_reader.getNumPages()):
-                                        pdf_writer.addPage(pdf_reader.getPage(page))
-                                    cnt+=1
+                                    pdf_writer = read_pdf(
+                                        pdf_reader, pdf_writer)
+
+                                    cnt += 1
                                 if cnt == args.count:
-                                        break
+                                    break
 
                             if args.contains is not None:
-                                if re.search(re.escape(str(args.contains)),pdf[:-4],re.IGNORECASE):
+                                if re.search(re.escape(str(args.contains)), pdf[:-4], re.IGNORECASE):
                                     pdf_reader = PdfFileReader(pdf)
-                                    for page in range(pdf_reader.getNumPages()):
-                                        pdf_writer.addPage(pdf_reader.getPage(page))
-                                    cnt+=1
+                                    pdf_writer = read_pdf(
+                                        pdf_reader, pdf_writer)
+
+                                    cnt += 1
                                 if cnt == args.count:
-                                        break
-
-
-
-
-
+                                    break
 
                 with open(args.filename_string, 'wb') as out:
                     pdf_writer.write(out)
-            
-            #Descending
+
+            # Descending
             if args.order == 1:
                 pdfs = [x for x in os.listdir() if ('.pdf' in x.lower())]
 
@@ -254,51 +231,51 @@ def main():
 
                         if args.start_string == None and args.end_string == None and args.contains == None:
                             pdf_reader = PdfFileReader(pdf)
-                            for page in range(pdf_reader.getNumPages()):
-                                pdf_writer.addPage(pdf_reader.getPage(page))
-                            cnt+=1
+                            pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+                            cnt += 1
                         if cnt == args.count:
-                            break  
+                            break
 
                         else:
                             if args.start_string is not None:
-                            #print('DEBUG: Entered StartsWith Portion')
+                                #print('DEBUG: Entered StartsWith Portion')
 
-                                if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+',pdf[:-4],re.IGNORECASE):
+                                if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', pdf[:-4], re.IGNORECASE):
                                     pdf_reader = PdfFileReader(pdf)
-                                    for page in range(pdf_reader.getNumPages()):
-                                        pdf_writer.addPage(pdf_reader.getPage(page))
-                                    cnt+=1
+                                    pdf_writer = read_pdf(
+                                        pdf_reader, pdf_writer)
+
+                                    cnt += 1
                                 if cnt == args.count:
-                                        break
-                                
+                                    break
+
                             if args.end_string is not None:
-                            #print('DEBUG: Entered EndsWith Portion')
+                                #print('DEBUG: Entered EndsWith Portion')
 
-                                if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$',pdf[:-4],re.IGNORECASE):
+                                if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', pdf[:-4], re.IGNORECASE):
                                     pdf_reader = PdfFileReader(pdf)
-                                    for page in range(pdf_reader.getNumPages()):
-                                        pdf_writer.addPage(pdf_reader.getPage(page))
-                                    cnt+=1
+                                    pdf_writer = read_pdf(
+                                        pdf_reader, pdf_writer)
+
+                                    cnt += 1
                                 if cnt == args.count:
-                                        break
+                                    break
 
                             if args.contains is not None:
-                                if re.search(re.escape(str(args.contains)),pdf[:-4],re.IGNORECASE):
+                                if re.search(re.escape(str(args.contains)), pdf[:-4], re.IGNORECASE):
                                     pdf_reader = PdfFileReader(pdf)
-                                    for page in range(pdf_reader.getNumPages()):
-                                        pdf_writer.addPage(pdf_reader.getPage(page))
-                                    cnt+=1
+                                    pdf_writer = read_pdf(
+                                        pdf_reader, pdf_writer)
+
+                                    cnt += 1
                                 if cnt == args.count:
-                                        break
-
-                            
-
+                                    break
 
                 with open(args.filename_string, 'wb') as out:
                     pdf_writer.write(out)
 
-            #Shuffle
+            # Shuffle
             if args.order == 2:
                 cnt = 0
 
@@ -309,10 +286,10 @@ def main():
                     if args.start_string == None and args.end_string == None and args.contains == None:
                         pdf_reader = PdfFileReader(choice)
                         pdfs.remove(choice)
-                        for page in range(pdf_reader.getNumPages()):
-                            pdf_writer.addPage(pdf_reader.getPage(page))
-                        cnt+=1
-                    
+                        pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+                        cnt += 1
+
                     if cnt == args.count:
                         break
 
@@ -320,65 +297,48 @@ def main():
                         if args.start_string is not None:
                             #print('DEBUG: Entered StartsWith Portion')
 
-                            if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+',choice[:-4],re.IGNORECASE):
+                            if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', choice[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(choice)
                                 pdfs.remove(choice)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
-                                cnt+=1
-                    
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+                                cnt += 1
+
                             if cnt == args.count:
                                 break
-
 
                         if args.end_string is not None:
                             #print('DEBUG: Entered EndsWith Portion')
 
-                            if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$',choice[:-4],re.IGNORECASE):
+                            if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', choice[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(choice)
                                 pdfs.remove(choice)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
-                                cnt+=1
-                    
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+                                cnt += 1
+
                             if cnt == args.count:
                                 break
 
-                        
                         if args.contains is not None:
                             #print('DEBUG: Entered Contains Portion')
-                            if re.search(re.escape(str(args.contains)),choice[:-4],re.IGNORECASE):
+                            if re.search(re.escape(str(args.contains)), choice[:-4], re.IGNORECASE):
                                 pdf_reader = PdfFileReader(choice)
                                 pdfs.remove(choice)
-                                for page in range(pdf_reader.getNumPages()):
-                                    pdf_writer.addPage(pdf_reader.getPage(page))
-                                cnt+=1
-                    
+                                pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+                                cnt += 1
+
                             if cnt == args.count:
                                 break
 
-                    
                 with open(args.filename_string, 'wb') as out:
                     pdf_writer.write(out)
 
-
-            
-
-
-        ##Count out of range
+        # Count out of range
         else:
             print('Count is more than available PDFs.')
 
-        
+
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-            
-
-
-
