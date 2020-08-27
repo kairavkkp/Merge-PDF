@@ -9,9 +9,11 @@
 [![Downloads](https://pepy.tech/badge/mergemypdf)](https://pepy.tech/project/mergemypdf)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
 
-</div>
+
 
 Merge PDF files using customizations within a folder using Command line.
+
+</div>
 
 # How to Install
 `pip install mergemypdf`
