@@ -8,6 +8,8 @@ python:
 # command to install dependencies
 install:
   - pip install PyPDF2==1.26.0
+  - pip install Pillow==7.2.0
+  - pip install img2pdf==0.4.0
 # command to run tests
 script:
   - python setup.py clean build develop || python3 setup.py clean build develop
