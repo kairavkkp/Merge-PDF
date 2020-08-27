@@ -1,12 +1,15 @@
 <div align="center">
   <img src="https://github.com/kairavkkp/Merge-PDF/blob/master/merge-pdf-logo.png" alt="Merge-PDF" align="center" width="150" height="150" />
-</div>
 
-# [Merge-PDF](https://github.com/kairavkkp/Merge-PDF)
+
+# [Merge-PDF](https://github.com/kairavkkp/Merge-PDF) 
+
 [![Build Status](https://travis-ci.com/kairavkkp/Merge-PDF.svg?branch=master)](https://travis-ci.com/kairavkkp/Merge-PDF)
 [![PyPI version](https://badge.fury.io/py/mergemypdf.svg)](https://badge.fury.io/py/mergemypdf)
 [![Downloads](https://pepy.tech/badge/mergemypdf)](https://pepy.tech/project/mergemypdf)
 ![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)
+
+</div>
 
 Merge PDF files using customizations within a folder using Command line.
 
