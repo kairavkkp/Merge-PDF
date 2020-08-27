@@ -1,3 +1,7 @@
+<center>
+  <img src="https://github.com/kairavkkp/Merge-PDF/blob/master/merge-pdf-logo.png" alt="Merge-PDF" width="150" height="150">
+</center>
+
 # [Merge-PDF](https://github.com/kairavkkp/Merge-PDF)
 [![Build Status](https://travis-ci.com/kairavkkp/Merge-PDF.svg?branch=master)](https://travis-ci.com/kairavkkp/Merge-PDF)
 [![PyPI version](https://badge.fury.io/py/mergemypdf.svg)](https://badge.fury.io/py/mergemypdf)
@@ -35,8 +39,12 @@ Merge PDF files using customizations within a folder using Command line.
 - `-e` represents end string in PDF file's name.
 - `-cn` represents string containing in PDF file's name.
 - `-f` represents saved file name. Default names are randomly generated, adviced to specify a name everytime.
+- `-i` represents the flag if only images need to be merged within a folder. Default is false.
+- `-ip` represents the flag if both images and pdfs need to be merged within a folder. Default is false.
 
 #### Usage of Optional Arguments.
 - `mergemypdf -s 09` Only merge PDFs starting with 09.
 - `mergemypdf -e Derivation` Only merge PDFs ending with Derivation.
 - `mergemypdf -cn Lecture` Only merge PDFs having keyword 'Lecture' in the name.
+- `mergemypdf -i 1` Only merge Images from the directory.
+- `mergemypdf -ip 1` Merge both Images and PDFs from the directory.
