@@ -6,10 +6,10 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mergemypdf",
-    version="0.0.3",
+    version="0.1.0",
     author="kairavkkp",
     author_email="kairavpithadia13@gmail.com",
-    description="Merge PDFs using CLI with customizations.",
+    description="Merge Images and PDFs using CLI with customizations.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
@@ -24,13 +24,16 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Unix",
     ],
-    keywords="Merge-pdf PDF-CLI merge pdf merge-pdf-local offline-merge pdf-merge",
+    keywords="Merge-pdf PDF-CLI merge pdf merge-pdf-local offline-merge pdf-merge jpg-pdf-merge image-pdf-merge png-jpg-merge-pdf",
 
     entry_points={
         "console_scripts": ['mergemypdf = merge_pdf.merge_pdf:main'],
     },
     python_requires='>=3.6',
     install_requires=[
-        'PyPDF2==1.26.0'
+        'PyPDF2==1.26.0',
+        'img2pdf==0.4.0',
+        'Pillow==7.2.0'
+
     ],
 )

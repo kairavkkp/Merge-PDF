@@ -16,6 +16,13 @@ __pycache__/
 *.PdF
 *.pDF
 
+# Images
+*.jpg
+*.jpeg
+*.png
+*.tiff
+*.gif
+
 # Distribution / packaging
 .Python
 build/
