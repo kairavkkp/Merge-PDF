@@ -1,6 +1,6 @@
-<center>
-  <img src="https://github.com/kairavkkp/Merge-PDF/blob/master/merge-pdf-logo.png" alt="Merge-PDF" width="150" height="150">
-</center>
+<div align="center">
+  <img src="https://github.com/kairavkkp/Merge-PDF/blob/master/merge-pdf-logo.png" alt="Merge-PDF" align="center" width="150" height="150" />
+</div>
 
 # [Merge-PDF](https://github.com/kairavkkp/Merge-PDF)
 [![Build Status](https://travis-ci.com/kairavkkp/Merge-PDF.svg?branch=master)](https://travis-ci.com/kairavkkp/Merge-PDF)
