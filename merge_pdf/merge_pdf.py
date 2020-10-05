@@ -9,6 +9,8 @@ import uuid
 from PIL import Image
 import img2pdf
 import io
+import fitz
+from io import BytesIO
 
 image_extns = ['jpg', 'jpeg', 'tiff', 'png', 'gif']
 
@@ -17,12 +19,30 @@ def pdf_global(pdfs, args, pdf_writer):
     cnt = 0
 
     for pdf in pdfs:
+        idata = open(pdf, "rb").read()  # read the PDF into memory and
+        ibuffer = BytesIO(idata)  # convert to stream
+        
+        doc = fitz.open("pdf", ibuffer)
+
+        if doc.isEncrypted:
+            if args.password:
+                rc = doc.authenticate(args.password)
+                if not rc > 0:
+                    raise ValueError("wrong password")
+            else:
+                password = input(f"{pdf} is encrypted. Please enter password: ")
+                rc = doc.authenticate(password)
+                if not rc > 0:
+                    raise ValueError("wrong password")
+
+        c = doc.write(garbage=3, deflate=True)
+        del doc  # close & delete doc
 
         if cnt == args.count:
             break
 
         if args.start_string == None and args.end_string == None and args.contains == None:
-            pdf_reader = PdfFileReader(pdf)
+            pdf_reader = PdfFileReader(BytesIO(c))
             pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
             cnt += 1
@@ -35,7 +55,7 @@ def pdf_global(pdfs, args, pdf_writer):
                 #print('DEBUG: Entered StartsWith Portion')
 
                 if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', pdf[:-4], re.IGNORECASE):
-                    pdf_reader = PdfFileReader(pdf)
+                    pdf_reader = PdfFileReader(BytesIO(c))
                     pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
                     cnt += 1
@@ -44,7 +64,7 @@ def pdf_global(pdfs, args, pdf_writer):
                 #print('DEBUG: Entered EndsWith Portion')
 
                 if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', pdf[:-4], re.IGNORECASE):
-                    pdf_reader = PdfFileReader(pdf)
+                    pdf_reader = PdfFileReader(BytesIO(c))
                     pdf_writer = read_pdf(pdf_reader, pdf_writer)
                     cnt += 1
 
@@ -52,7 +72,7 @@ def pdf_global(pdfs, args, pdf_writer):
                 #print('DEBUG: Entered Contains Portion')
 
                 if re.search(re.escape(str(args.contains)), pdf[:-4], re.IGNORECASE):
-                    pdf_reader = PdfFileReader(pdf)
+                    pdf_reader = PdfFileReader(BytesIO(c))
                     pdf_writer = read_pdf(pdf_reader, pdf_writer)
                     cnt += 1
 
@@ -138,6 +158,7 @@ def main():
                         help='Merge Both PDFs and Images. Default is Only PDF')  # default Only PDF
     parser.add_argument('-f', '--filename', action='store', dest='filename_string', default=str(uuid.uuid4()
                                                                                                 ).split('-')[0]+'.pdf', help='Filename of the merged PDF. Default is randomly generated names.')
+    parser.add_argument('-p', '--password', action='store',dest='password', help='Password used to decrypt all PDFs. If the PDFs have individually different passwords omit this and you will be prompted to enter each password.')
 
     args = parser.parse_args()
     print(args)

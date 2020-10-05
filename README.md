@@ -46,6 +46,7 @@ Merge PDF files using customizations within a folder using Command line.
 - `-f` represents saved file name. Default names are randomly generated, adviced to specify a name everytime.
 - `-i` represents the flag if only images need to be merged within a folder. Default is false.
 - `-ip` represents the flag if both images and pdfs need to be merged within a folder. Default is false.
+- `-p` represents password used to decrypt PDFs. If the PDFs have individually different passwords omit this and you will be prompted to enter each password.
 
 #### Usage of Optional Arguments.
 - `mergemypdf -s 09` Only merge PDFs starting with 09.
