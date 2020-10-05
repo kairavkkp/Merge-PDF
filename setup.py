@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mergemypdf",
-    version="0.1.0",
+    version="0.1.1",
     author="kairavkkp",
     author_email="kairavpithadia13@gmail.com",
     description="Merge Images and PDFs using CLI with customizations.",
@@ -16,7 +16,7 @@ setuptools.setup(
     url="https://github.com/kairavkkp/Merge-PDF",
     packages=setuptools.find_packages(),
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
@@ -24,7 +24,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: Unix",
     ],
-    keywords="Merge-pdf PDF-CLI merge pdf merge-pdf-local offline-merge pdf-merge jpg-pdf-merge image-pdf-merge png-jpg-merge-pdf",
+    keywords="Merge-pdf PDF-CLI merge pdf merge-pdf-local offline-merge pdf-merge jpg-pdf-merge image-pdf-merge png-jpg-merge-pdf encrypted-pdf password-protected protected-pdf",
 
     entry_points={
         "console_scripts": ['mergemypdf = merge_pdf.merge_pdf:main'],
@@ -35,6 +35,5 @@ setuptools.setup(
         'img2pdf==0.4.0',
         'Pillow==7.2.0',
         'PyMuPDF==1.17.7'
-
     ],
 )
