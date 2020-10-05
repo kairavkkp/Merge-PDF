@@ -11,6 +11,7 @@ import img2pdf
 import io
 import fitz
 from io import BytesIO
+from getpass import getpass
 
 image_extns = ['jpg', 'jpeg', 'tiff', 'png', 'gif']
 
@@ -30,7 +31,7 @@ def pdf_global(pdfs, args, pdf_writer):
                 if not rc > 0:
                     raise ValueError("wrong password")
             else:
-                password = input(f"{pdf} is encrypted. Please enter password: ")
+                password = getpass(f"{pdf} is encrypted. Please enter password: ")
                 rc = doc.authenticate(password)
                 if not rc > 0:
                     raise ValueError("wrong password")
