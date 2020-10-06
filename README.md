@@ -26,8 +26,14 @@ Merge PDF files using customizations within a folder using Command line.
 #### Usage: 
 `mergemypdf -c <number_of_pdfs> -o <order_of_merging>  -f <output_pdf_filename>`
 
-#### Example Usage:
+#### Examples:
 `mergemypdf -c 10 -o 1 -f merged.pdf`
+
+`mergemypdf -p password -f merged.pdf`
+
+`mergemypdf -ep 1 -p password`
+
+`mergemypdf -a 1 -f merged.pdf`
 
 
 #### Optional arguments:
@@ -58,3 +64,8 @@ Merge PDF files using customizations within a folder using Command line.
 - `mergemypdf -cn Lecture` Only merge PDFs having keyword 'Lecture' in the name.
 - `mergemypdf -i 1` Only merge Images from the directory.
 - `mergemypdf -ip 1` Merge both Images and PDFs from the directory.
+- `mergemypdf -p test123` Merge all PDFs from directory using the supplied password on any encrypted PDFs.
+- `mergemypdf -epub 1` Only merge EPUB files from the directory.
+- `mergemypdf -ep 1` Merge both EPUBs and PDFs from the directory.
+- `mergemypdf -ie 1` Merge both Images and EPUBs from the directory.
+- `mergemypdf -a 1` Merge PDFs, Images and EPUBs from the directory.
