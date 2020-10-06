@@ -47,6 +47,10 @@ Merge PDF files using customizations within a folder using Command line.
 - `-i` represents the flag if only images need to be merged within a folder. Default is false.
 - `-ip` represents the flag if both images and pdfs need to be merged within a folder. Default is false.
 - `-p` represents password used to decrypt PDFs. If the PDFs have individually different passwords omit this and you will be prompted to enter each password.
+- `-epub` represents the flag if only EPUBs need to be merged within a folder. Default is false.
+- `-ep` represents the flag if both EPUBs and PDFs need to be merged within a folder. Default is false.
+- `-ie` represents the flag if both images and EPUBs need to be merged within a folder. Default is false.
+- `-a` represents the flag if all support file types (PDF, Images and EPUBS) need to be merged within a folder. Default is false.
 
 #### Usage of Optional Arguments.
 - `mergemypdf -s 09` Only merge PDFs starting with 09.

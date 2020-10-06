@@ -210,6 +210,12 @@ def main():
     
     parser.add_argument('-epub', '--epubonly', action='store', dest='epubonly', default=0, type=int,
                         help='Only merge EPUB files. Default is 0 (No images)')  # default None
+    parser.add_argument('-ep', '--epub_pdf', action='store', dest='epub_pdf', default=0, type=int,
+                        help='Merge both EPUBs and PDFs. Default is only PDFs')  # default None
+    parser.add_argument('-ie', '--image_epub', action='store', dest='image_epub', default=0, type=int,
+                        help='Merge both Images and EPUBs. Default is only PDFs')  # default None
+    parser.add_argument('-a', '--all', action='store', dest='all', default=0, type=int,
+                        help='Merge all support file types (PDF, Images and EPUBS). Default is only PDFs')  # default None
 
 
     args = parser.parse_args()
@@ -235,6 +241,19 @@ def main():
             pdf_writer = image_global(imgs, args, pdf_writer)
 
         elif args.epubonly == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+        
+        elif args.epub_pdf == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+            pdf_writer = pdf_global(pdfs, args, pdf_writer)
+
+        elif args.image_epub == 1:
+            pdf_writer = image_global(imgs, args, pdf_writer)
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+        
+        elif args.all == 1:
+            pdf_writer = pdf_global(pdfs, args, pdf_writer)
+            pdf_writer = image_global(imgs, args, pdf_writer)
             pdf_writer = epub_global(epubs, args, pdf_writer)
         
         else:
