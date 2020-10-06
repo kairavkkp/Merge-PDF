@@ -80,6 +80,53 @@ def pdf_global(pdfs, args, pdf_writer):
     return pdf_writer
 
 
+def epub_global(epubs, args, pdf_writer):
+    cnt = 0
+
+    for epub in epubs:     
+        doc = fitz.open(epub)
+        c = doc.convertToPDF()
+
+        if cnt == args.count:
+            break
+
+        if args.start_string == None and args.end_string == None and args.contains == None:
+            pdf_reader = PdfFileReader(BytesIO(c))
+            pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+            cnt += 1
+
+        # With end or start strings
+        else:
+            # Starts
+            if args.start_string is not None:
+                #print('DEBUG: Entered StartsWith Portion')
+
+                if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', epub[:-5], re.IGNORECASE):
+                    pdf_reader = PdfFileReader(BytesIO(c))
+                    pdf_writer = read_pdf(pdf_reader, pdf_writer)
+
+                    cnt += 1
+
+            if args.end_string is not None:
+                #print('DEBUG: Entered EndsWith Portion')
+
+                if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', epub[:-5], re.IGNORECASE):
+                    pdf_reader = PdfFileReader(BytesIO(c))
+                    pdf_writer = read_pdf(pdf_reader, pdf_writer)
+                    cnt += 1
+
+            if args.contains is not None:
+                #print('DEBUG: Entered Contains Portion')
+
+                if re.search(re.escape(str(args.contains)), epub[:-5], re.IGNORECASE):
+                    pdf_reader = PdfFileReader(BytesIO(c))
+                    pdf_writer = read_pdf(pdf_reader, pdf_writer)
+                    cnt += 1
+
+    return pdf_writer
+
+
 def image_global(imgs, args, pdf_writer, count=-1):
 
     cnt = 0
@@ -160,6 +207,10 @@ def main():
     parser.add_argument('-f', '--filename', action='store', dest='filename_string', default=str(uuid.uuid4()
                                                                                                 ).split('-')[0]+'.pdf', help='Filename of the merged PDF. Default is randomly generated names.')
     parser.add_argument('-p', '--password', action='store',dest='password', help='Password used to decrypt all PDFs. If the PDFs have individually different passwords omit this and you will be prompted to enter each password.')
+    
+    parser.add_argument('-epub', '--epubonly', action='store', dest='epubonly', default=0, type=int,
+                        help='Only merge EPUB files. Default is 0 (No images)')  # default None
+
 
     args = parser.parse_args()
     print(args)
@@ -171,6 +222,8 @@ def main():
     pdfs = sorted([x for x in os.listdir() if ('.pdf' in x.lower())])
     imgs = sorted([x for x in os.listdir() if (
         x.lower().split('.')[-1] in image_extns)])
+    epubs = sorted([x for x in os.listdir() if ('.epub' in x.lower())])
+
 
     # Ascending
     if args.order == 0:
@@ -181,6 +234,9 @@ def main():
             pdf_writer = pdf_global(pdfs, args, pdf_writer)
             pdf_writer = image_global(imgs, args, pdf_writer)
 
+        elif args.epubonly == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+        
         else:
             pdf_writer = pdf_global(pdfs, args, pdf_writer)
 
@@ -191,6 +247,7 @@ def main():
     if args.order == 1:
         pdfs = pdfs[::-1]
         imgs = imgs[::-1]
+        epubs = epubs[::-1]
 
         if args.imageonly == 1:
             pdf_writer = image_global(imgs, args, pdf_writer)
@@ -198,6 +255,10 @@ def main():
         elif args.image_pdf == 1:
             pdf_writer = pdf_global(pdfs, args, pdf_writer)
             pdf_writer = image_global(imgs, args, pdf_writer)
+
+        elif args.epubonly == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+            
         else:
             pdf_writer = pdf_global(pdfs, args, pdf_writer)
 
@@ -208,6 +269,7 @@ def main():
     if args.order == 2:
         pdf_choice = []
         img_choice = []
+        epub_choice = []
 
         count = 0
         for count in range(len(pdfs)):
@@ -221,12 +283,22 @@ def main():
             img_choice.append(choice)
             imgs.remove(choice)
 
+        count = 0
+        for count in range(len(epubs)):
+            choice = random.choice(epubs)
+            epub_choice.append(choice)
+            epubs.remove(choice)
+
+
         if args.imageonly == 1:
             pdf_writer = image_global(img_choice, args, pdf_writer)
 
         elif args.image_pdf == 1:
             pdf_writer = pdf_global(pdf_choice, args, pdf_writer)
             pdf_writer = image_global(img_choice, args, pdf_writer)
+
+        elif args.epubonly == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
 
         else:
             pdf_writer = pdf_global(pdf_choice, args, pdf_writer)
