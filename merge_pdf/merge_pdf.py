@@ -277,6 +277,19 @@ def main():
 
         elif args.epubonly == 1:
             pdf_writer = epub_global(epubs, args, pdf_writer)
+        
+        elif args.epub_pdf == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+            pdf_writer = pdf_global(pdfs, args, pdf_writer)
+
+        elif args.image_epub == 1:
+            pdf_writer = image_global(imgs, args, pdf_writer)
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+        
+        elif args.all == 1:
+            pdf_writer = pdf_global(pdfs, args, pdf_writer)
+            pdf_writer = image_global(imgs, args, pdf_writer)
+            pdf_writer = epub_global(epubs, args, pdf_writer)
             
         else:
             pdf_writer = pdf_global(pdfs, args, pdf_writer)
@@ -317,6 +330,19 @@ def main():
             pdf_writer = image_global(img_choice, args, pdf_writer)
 
         elif args.epubonly == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+
+        elif args.epub_pdf == 1:
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+            pdf_writer = pdf_global(pdfs, args, pdf_writer)
+
+        elif args.image_epub == 1:
+            pdf_writer = image_global(imgs, args, pdf_writer)
+            pdf_writer = epub_global(epubs, args, pdf_writer)
+        
+        elif args.all == 1:
+            pdf_writer = pdf_global(pdfs, args, pdf_writer)
+            pdf_writer = image_global(imgs, args, pdf_writer)
             pdf_writer = epub_global(epubs, args, pdf_writer)
 
         else:
