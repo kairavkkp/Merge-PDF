@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mergemypdf",
-    version="0.1.2",
+    version="0.2.0",
     author="kairavkkp",
     author_email="kairavpithadia13@gmail.com",
     description="Merge Images, EPubs and PDFs using CLI with customizations.",
@@ -21,6 +21,8 @@ setuptools.setup(
         "Programming Language :: Python :: 3.5",
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
         "Operating System :: Unix",
     ],
@@ -34,6 +36,7 @@ setuptools.setup(
         'PyPDF2==1.26.0',
         'img2pdf==0.4.0',
         'Pillow==8.2.0',
-        'PyMuPDF==1.17.7'
+        'PyMuPDF==1.17.7',
+        'pytest==6.2.4'
     ],
 )

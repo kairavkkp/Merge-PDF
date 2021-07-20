@@ -26,6 +26,9 @@ __pycache__/
 # EPUB Files
 *.epub
 
+# Allow sample files
+!tests/*/*
+
 # Distribution / packaging
 .Python
 build/

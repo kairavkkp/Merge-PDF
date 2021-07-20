@@ -69,3 +69,8 @@ Merge PDF files using customizations within a folder using Command line.
 - `mergemypdf -ep 1` Merge both EPUBs and PDFs from the directory.
 - `mergemypdf -ie 1` Merge both Images and EPUBs from the directory.
 - `mergemypdf -a 1` Merge PDFs, Images and EPUBs from the directory.
+
+#### Tests
+- Sample Files
+  - `sample.pdf`, `sample-protected.pdf`, `sample.epub`, `sample.jpeg`, `sample.jpg`, `sample.tiff`, `sample.png`, `sample.gif`.
+- Tests are based on pytest.
