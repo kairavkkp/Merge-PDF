@@ -33,7 +33,7 @@ setuptools.setup(
     install_requires=[
         'PyPDF2==1.26.0',
         'img2pdf==0.4.0',
-        'Pillow==8.2.0',
+        'Pillow==8.3.2',
         'PyMuPDF==1.17.7'
     ],
 )
