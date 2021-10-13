@@ -6,8 +6,8 @@ from PyPDF2 import PdfFileReader, PdfFileWriter
 import random
 import re
 import uuid
-from PIL import Image
-import img2pdf
+#from PIL import Image
+#import img2pdf
 import io
 import fitz
 from io import BytesIO
@@ -15,15 +15,56 @@ from getpass import getpass
 
 image_extns = ['jpg', 'jpeg', 'tiff', 'png', 'gif']
 
+def pdf_global_fitz(pdfs, args, pdf_writer_fitz):
+    cnt = 0
+    for pdf in pdfs:
+        doc = fitz.open(pdf)
+        if doc.isEncrypted:
+            if args.password:
+                rc = doc.authenticate(args.password)
+                if not rc > 0:
+                    raise ValueError("wrong password")
+            else:
+                password = getpass(f"{pdf} is encrypted. Please enter password: ")
+                rc = doc.authenticate(password)
+                if not rc > 0:
+                    raise ValueError("wrong password")
+        if cnt == args.count:
+            break
+        if args.start_string == None and args.end_string == None and args.contains == None:
+            pdf_writer_fitz.insert_pdf(doc)
+            cnt += 1
+        # With end or start strings
+        else:
+            # Starts
+            if args.start_string is not None:
+                #print('DEBUG: Entered StartsWith Portion')
+                if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', pdf[:-4], re.IGNORECASE):
+                    pdf_writer_fitz.insert_pdf(doc)
+                    cnt += 1
+
+            if args.end_string is not None:
+                #print('DEBUG: Entered EndsWith Portion')
+                if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', pdf[:-4], re.IGNORECASE):
+                    pdf_writer_fitz.insert_pdf(doc)
+                    cnt += 1
+
+            if args.contains is not None:
+                #print('DEBUG: Entered Contains Portion')
+                if re.search(re.escape(str(args.contains)), pdf[:-4], re.IGNORECASE):
+                    pdf_writer_fitz.insert_pdf(doc)
+                    cnt += 1
+
 
 def pdf_global(pdfs, args, pdf_writer):
     cnt = 0
 
     for pdf in pdfs:
-        idata = open(pdf, "rb").read()  # read the PDF into memory and
-        ibuffer = BytesIO(idata)  # convert to stream
+        #idata = open(pdf, "rb").read()  # read the PDF into memory and
+        #ibuffer = BytesIO(idata)  # convert to stream
         
-        doc = fitz.open("pdf", ibuffer)
+        #doc = fitz.open("pdf", ibuffer)
+        doc = fitz.open(pdf)
 
         if doc.isEncrypted:
             if args.password:
@@ -36,14 +77,15 @@ def pdf_global(pdfs, args, pdf_writer):
                 if not rc > 0:
                     raise ValueError("wrong password")
 
-        c = doc.write(garbage=3, deflate=True)
-        del doc  # close & delete doc
+        #c = doc.write(garbage=3, deflate=True)
+        #del doc  # close & delete doc
 
         if cnt == args.count:
             break
 
         if args.start_string == None and args.end_string == None and args.contains == None:
-            pdf_reader = PdfFileReader(BytesIO(c))
+            #pdf_reader = PdfFileReader(BytesIO(c))
+
             pdf_writer = read_pdf(pdf_reader, pdf_writer)
 
             cnt += 1
@@ -125,6 +167,68 @@ def epub_global(epubs, args, pdf_writer):
                     cnt += 1
 
     return pdf_writer
+
+
+def image_global_fitz(imgs, args, pdf_writer_fitz, count=-1):
+    cnt = 0
+    for img in imgs:
+        if cnt == args.count:
+            break
+        if args.start_string == None and args.end_string == None and args.contains == None:
+            #pdf_writer = read_img(img, pdf_writer)
+
+            img = fitz.open(img) # open pic as document
+            rect = img[0].rect # pic dimension
+            pdfbytes = img.convert_to_pdf() # make a PDF stream
+            img.close() # no longer needed
+            imgPDF = fitz.open("pdf", pdfbytes) # open stream as PDF
+            page = pdf_writer_fitz.new_page(width = rect.width, height = rect.height) # new page with pic dimensions
+            page.show_pdf_page(rect, imgPDF, 0) # image fills the page
+
+            cnt += 1
+         # With end or start strings
+        else:
+            # Starts
+
+            if args.start_string is not None:
+                #print('DEBUG: Entered StartsWith Portion')
+
+                if re.search(r'^'+re.escape((args.start_string))+r'[\w+\s+\d+]+', img[:-4], re.IGNORECASE):
+                    img = fitz.open(img) # open pic as document
+                    rect = img[0].rect # pic dimension
+                    pdfbytes = img.convert_to_pdf() # make a PDF stream
+                    img.close() # no longer needed
+                    imgPDF = fitz.open("pdf", pdfbytes) # open stream as PDF
+                    page = pdf_writer_fitz.new_page(width = rect.width, height = rect.height) # new page with pic dimensions
+                    page.show_pdf_page(rect, imgPDF, 0) # image fills the page
+                    
+                    cnt += 1
+
+            if args.end_string is not None:
+                #print('DEBUG: Entered EndsWith Portion')
+
+                if re.search(r'[\d+\w+\s+]'+re.escape(str(args.end_string))+r'$', img[:-4], re.IGNORECASE):
+                    img = fitz.open(img) # open pic as document
+                    rect = img[0].rect # pic dimension
+                    pdfbytes = img.convert_to_pdf() # make a PDF stream
+                    img.close() # no longer needed
+                    imgPDF = fitz.open("pdf", pdfbytes) # open stream as PDF
+                    page = pdf_writer_fitz.new_page(width = rect.width, height = rect.height) # new page with pic dimensions
+                    page.show_pdf_page(rect, imgPDF, 0) # image fills the page
+                    cnt += 1
+
+            if args.contains is not None:
+                #print('DEBUG: Entered Contains Portion')
+
+                if re.search(re.escape(str(args.contains)), img[:-4], re.IGNORECASE):
+                    img = fitz.open(img) # open pic as document
+                    rect = img[0].rect # pic dimension
+                    pdfbytes = img.convert_to_pdf() # make a PDF stream
+                    img.close() # no longer needed
+                    imgPDF = fitz.open("pdf", pdfbytes) # open stream as PDF
+                    page = pdf_writer_fitz.new_page(width = rect.width, height = rect.height) # new page with pic dimensions
+                    page.show_pdf_page(rect, imgPDF, 0) # image fills the page
+                    cnt += 1
 
 
 def image_global(imgs, args, pdf_writer, count=-1):
@@ -225,6 +329,8 @@ def main():
 
     pdf_writer = PdfFileWriter()
 
+    pdf_writer_fitz = fitz.open()
+
     pdfs = sorted([x for x in os.listdir() if ('.pdf' in x.lower())])
     imgs = sorted([x for x in os.listdir() if (
         x.lower().split('.')[-1] in image_extns)])
@@ -234,11 +340,16 @@ def main():
     # Ascending
     if args.order == 0:
         if args.imageonly == 1:
-            pdf_writer = image_global(imgs, args, pdf_writer)
+            #pdf_writer = image_global(imgs, args, pdf_writer)
+            image_global_fitz(imgs, args, pdf_writer_fitz)
+            pdf_writer_fitz.save(args.filename_string)
 
         elif args.image_pdf == 1:
-            pdf_writer = pdf_global(pdfs, args, pdf_writer)
-            pdf_writer = image_global(imgs, args, pdf_writer)
+            # pdf_writer = pdf_global(pdfs, args, pdf_writer)
+            # pdf_writer = image_global(imgs, args, pdf_writer)
+            pdf_global_fitz(pdfs, args, pdf_writer_fitz)
+            image_global_fitz(imgs, args, pdf_writer_fitz)
+            pdf_writer_fitz.save(args.filename_string)
 
         elif args.epubonly == 1:
             pdf_writer = epub_global(epubs, args, pdf_writer)
@@ -257,10 +368,13 @@ def main():
             pdf_writer = epub_global(epubs, args, pdf_writer)
         
         else:
-            pdf_writer = pdf_global(pdfs, args, pdf_writer)
+            #pdf_writer = pdf_global(pdfs, args, pdf_writer)
+            pdf_global_fitz(pdfs, args, pdf_writer_fitz)
+            pdf_writer_fitz.save(args.filename_string)
+            
 
-        with open(args.filename_string, 'wb') as out:
-            pdf_writer.write(out)
+        # with open(args.filename_string, 'wb') as out:
+        #     pdf_writer.write(out)
 
     # Descending
     if args.order == 1:
