@@ -29,12 +29,21 @@ def pdf_global(pdfs, args, pdf_writer):
             if args.password:
                 rc = doc.authenticate(args.password)
                 if not rc > 0:
-                    raise ValueError("wrong password")
+                    while True:
+                        print("Wrong password. Please try again.")
+                        password = getpass(f"{pdf} is encrypted. Please enter password: ")
+                        rc = doc.authenticate(password)
+                        if not rc > 0:
+                            continue
+                        break
             else:
-                password = getpass(f"{pdf} is encrypted. Please enter password: ")
-                rc = doc.authenticate(password)
-                if not rc > 0:
-                    raise ValueError("wrong password")
+                while True:
+                    password = getpass(f"{pdf} is encrypted. Please enter password: ")
+                    rc = doc.authenticate(password)
+                    if not rc > 0:
+                        print("Wrong password. Please try again.")
+                        continue
+                    break
 
         c = doc.write(garbage=3, deflate=True)
         del doc  # close & delete doc
