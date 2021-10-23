@@ -31,6 +31,6 @@ setuptools.setup(
     },
     python_requires='>=3.6',
     install_requires=[
-        'PyMuPDF==1.17.7'
+        'PyMuPDF==1.19.0'
     ],
 )

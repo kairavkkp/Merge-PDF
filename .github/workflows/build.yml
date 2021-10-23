@@ -14,11 +14,11 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.9.x'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install wheel
-          pip install PyMuPDF==1.17.7
+          pip install PyMuPDF==1.19.0
       - name: Build package
         run: python setup.py clean build develop || python3 setup.py clean build develop
